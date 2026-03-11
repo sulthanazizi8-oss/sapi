@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Animasi Kanji Ushi (Sapi) - Visibilitas Nomor</title>
+    <style>
+        /* Tampilan putih polos, looping otomatis, tanpa tombol */
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background-color: #ffffff; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        svg { 
+            width: 400px; 
+            height: 400px; 
+        }
+
+        path { 
+            fill: none; 
+            stroke: #000000; /* Hitam pekat */
+            stroke-width: 5; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+        }
+        
+        /* Gaya Nomor Urutan */
+        text { 
+            font-size: 7.5px; 
+            font-weight: bold; 
+            fill: #000000; 
+            opacity: 0; 
+            transition: opacity 0.3s; 
+            font-family: Arial, sans-serif;
+        }
+
+        .show-num { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <svg viewBox="0 0 100 100" id="kanji-svg">
+        <!-- 4 Guratan Kanji Ushi (牛) Berdasarkan Sumber Gambar -->
+        <path id="p1" d="M38,21 Q30,30 20,46" /> <!-- 1: Melengkung (ノ) -->
+        <path id="p2" d="M30,38 L76,32" /> <!-- 2: Horisontal pendek -->
+        <path id="p3" d="M12,61 L88,56" /> <!-- 3: Horisontal panjang -->
+        <path id="p4" d="M52,14 L52,94" /> <!-- 4: Vertikal panjang -->
+
+        <!-- Penempatan nomor urutan (disesuaikan agar tidak tertutup garis hitam) -->
+        <text x="24" y="21" id="n1">1</text> <!-- Di sisi kiri guratan 1 -->
+        <text x="35" y="32" id="n2">2</text> <!-- Di atas guratan 2 -->
+        <text x="4" y="61" id="n3">3</text>  <!-- Di sisi kiri guratan 3 -->
+        <text x="40" y="14" id="n4">4</text> <!-- Di sisi kiri atas guratan 4 -->
+    </svg>
+
+    <script>
+        const totalStrokes = 4;
+
+        function animateLoop() {
+            // 1. Reset awal: Sembunyikan semua guratan dan nomor
+            for (let i = 1; i <= totalStrokes; i++) {
+                const path = document.getElementById(`p${i}`);
+                const num = document.getElementById(`n${i}`);
+                const length = path.getTotalLength();
+                
+                path.style.transition = 'none';
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length;
+                num.classList.remove('show-num');
+            }
+
+            // 2. Jalankan animasi menulis berurutan 1 sampai 4
+            let delay = 300; 
+            for (let i = 1; i <= totalStrokes; i++) {
+                setTimeout(() => {
+                    const path = document.getElementById(`p${i}`);
+                    const num = document.getElementById(`n${i}`);
+                    
+                    num.classList.add('show-num'); 
+                    path.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
+                    path.style.strokeDashoffset = '0';
+                }, delay);
+                
+                delay += 1000; 
+            }
+
+            // 3. Mengulang animasi terus-menerus (looping)
+            setTimeout(animateLoop, delay + 2500);
+        }
+
+        // Jalankan otomatis saat halaman dimuat
+        window.onload = animateLoop;
+    </script>
+</body>
+</html>
